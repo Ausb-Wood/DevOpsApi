@@ -1,0 +1,17 @@
+# Git ignoriert diese erzeugten oder lokalen Dateien.
+# Von Gradle erzeugte Buildausgaben.
+build/
+.gradle/
+
+# IDE-Dateien.
+.idea/
+*.iml
+.vscode/
+
+# Betriebssystemdateien.
+.DS_Store
+Thumbs.db
+
+# Lokale Umgebungsdateien und Geheimnisse.
+.env
+*.local

@@ -1,0 +1,14 @@
+# Docker Compose beschreibt einen oder mehrere gemeinsam gestartete Services.
+services:
+  app: # Frei wählbarer Name des Services.
+    build: . # Baut das Dockerfile aus dem aktuellen Ordner.
+    ports:
+      - "8080:8080" # Host-Port links wird mit Container-Port rechts verbunden.
+    environment:
+      SPRING_PROFILES_ACTIVE: local # Übergibt eine Umgebungsvariable an Spring.
+    healthcheck:
+      # CMD führt curl direkt im Container aus; Rückgabecode 0 bedeutet gesund.
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/api/health"]
+      interval: 10s # Abstand zwischen Prüfungen.
+      timeout: 3s # Maximale Dauer einer Prüfung.
+      retries: 5 # Nach fünf Fehlern gilt der Container als unhealthy.

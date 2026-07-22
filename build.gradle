@@ -1,0 +1,41 @@
+plugins {
+    // Plugin = Erweiterung für Gradle. Es fügt Aufgaben und Regeln hinzu.
+    id 'java' // Kompiliert Java und führt Tests aus.
+    id 'org.springframework.boot' version '3.5.4' // Baut und startet Spring Boot 3.5.4.
+    id 'io.spring.dependency-management' version '1.1.7' // Wählt passende Bibliotheksversionen.
+}
+
+group = 'de.kurs' // Eindeutige Hersteller-/Organisationskennung.
+version = '0.0.1-SNAPSHOT' // SNAPSHOT bedeutet: noch keine endgültige Veröffentlichung.
+description = 'Didaktische Spring-Boot-Anwendung für den DevOps-Kurs'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21) // Verlangt Java 21.
+    }
+}
+
+repositories {
+    // Repository = Server, von dem Gradle Bibliotheken herunterlädt.
+    mavenCentral() // Der Name bezeichnet den Dienst Maven Central, nicht das Buildwerkzeug Maven.
+}
+
+dependencies {
+    // Spring Boot 3.5 verwaltet kompatible Jackson-2-Versionen automatisch.
+    // Deshalb wird hier keine eigene Jackson-Version eingetragen.
+    // implementation: Bibliothek wird zum Kompilieren und Ausführen benötigt.
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // testImplementation: Bibliothek wird nur beim Testen benötigt.
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform() // Führt Tests mit JUnit 5 aus.
+}
+
+
+tasks.named('bootJar') {
+    // Fester Dateiname vereinfacht Docker, CI und manuelle Starts.
+    archiveFileName = 'task-api.jar'
+}

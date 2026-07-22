@@ -1,0 +1,37 @@
+# GitHub Actions führt diese Schritte automatisch auf einem GitHub-Rechner aus.
+name: CI
+
+on: # Ereignisse, die den Workflow starten.
+  push:
+    branches: ["main"] # Nur Pushes auf den Hauptbranch.
+  pull_request: # Zusätzlich jeder Pull Request.
+
+jobs:
+  build-and-test: # Name des Jobs.
+    runs-on: ubuntu-latest # Frische Ubuntu-VM von GitHub.
+    permissions:
+      contents: read # Der Job darf Repository-Inhalte nur lesen.
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v6 # Lädt den Quellcode in den Runner.
+
+      - name: Java 21 einrichten
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin # Verwendete Java-Distribution.
+          java-version: "21"
+          cache: gradle # Speichert heruntergeladene Bibliotheken zwischen Läufen.
+
+      - name: Gradle einrichten
+        uses: gradle/actions/setup-gradle@v4 # Optimiert Gradle für GitHub Actions.
+
+      - name: Testen und paketieren
+        run: ./gradlew --no-daemon clean build # Führt Shell-Befehl im Runner aus.
+
+      - name: JAR als Artefakt speichern
+        uses: actions/upload-artifact@v4 # Macht das Build-Ergebnis herunterladbar.
+        with:
+          name: task-api-jar
+          path: build/libs/task-api.jar # Fester Name aus der bootJar-Konfiguration.
+          if-no-files-found: error # Job schlägt fehl, wenn keine JAR entstand.

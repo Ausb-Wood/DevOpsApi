@@ -1,0 +1,45 @@
+# Deployment hält die gewünschte Anzahl laufender Pods aufrecht.
+apiVersion: apps/v1 # Version der Kubernetes-API.
+kind: Deployment # Art des Kubernetes-Objekts.
+metadata:
+  name: task-api # Eindeutiger Name im Namespace.
+spec:
+  replicas: 2 # Zwei identische Pods sollen laufen.
+  selector:
+    matchLabels:
+      app: task-api # Findet die vom Deployment verwalteten Pods.
+  template: # Vorlage für jeden neuen Pod.
+    metadata:
+      labels:
+        app: task-api
+    spec:
+      containers:
+        - name: task-api
+          image: task-api:1.0.0 # Name und Version des Container-Images.
+          imagePullPolicy: IfNotPresent # Nutzt lokales Image, wenn vorhanden.
+          ports:
+            - containerPort: 8080 # Port, auf dem die Anwendung lauscht.
+          readinessProbe: # Prüft, ob der Pod Anfragen annehmen darf.
+            httpGet:
+              path: /api/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe: # Prüft, ob der Prozess noch funktioniert.
+            httpGet:
+              path: /api/health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          resources:
+            requests: # Garantierter Planungsbedarf.
+              cpu: "100m" # 100m = ein Zehntel CPU-Kern.
+              memory: "128Mi"
+            limits: # Harte Obergrenzen.
+              cpu: "500m"
+              memory: "512Mi"
+          securityContext:
+            allowPrivilegeEscalation: false # Keine nachträglichen höheren Rechte.
+            runAsNonRoot: true # Container darf nicht als root laufen.
+            capabilities:
+              drop: ["ALL"] # Entfernt zusätzliche Linux-Sonderrechte.
