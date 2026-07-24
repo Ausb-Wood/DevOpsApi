@@ -1,0 +1,47 @@
+-----BEGIN CERTIFICATE-----
+MIIEEjCCAvqgAwIBAgIIBxv09z8yMXowDQYJKoZIhvcNAQELBQAwgakxCzAJBgNV
+BAYTAlVTMRMwEQYDVQQIDApDYWxpZm9ybmlhMRIwEAYDVQQHDAlTdW5ueXZhbGUx
+ETAPBgNVBAoMCEZvcnRpbmV0MR4wHAYDVQQLDBVDZXJ0aWZpY2F0ZSBBdXRob3Jp
+dHkxGTAXBgNVBAMMEEZHMkgxR1Q5MjU5MTMzNTcxIzAhBgkqhkiG9w0BCQEWFHN1
+cHBvcnRAZm9ydGluZXQuY29tMB4XDTI2MDUwNTEyNTgwNFoXDTM2MDUwNTEyNTgw
+NFowgakxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApDYWxpZm9ybmlhMRIwEAYDVQQH
+DAlTdW5ueXZhbGUxETAPBgNVBAoMCEZvcnRpbmV0MR4wHAYDVQQLDBVDZXJ0aWZp
+Y2F0ZSBBdXRob3JpdHkxGTAXBgNVBAMMEEZHMkgxR1Q5MjU5MTMzNTcxIzAhBgkq
+hkiG9w0BCQEWFHN1cHBvcnRAZm9ydGluZXQuY29tMIIBIjANBgkqhkiG9w0BAQEF
+AAOCAQ8AMIIBCgKCAQEA6214OePCoqGiDeNkWY1rSX8CbDTxuWLcCO3tkJwotURL
+pAzlwDVYvdVMklre881Tr2wd9Cmy4T+coBV/pPmOlByvcXGKsQfQ09pBWEKPpgzW
+Xv/YwgHNNoW+NfBP09RwOlVmrFhFbcPh7bkXscwnjbfq4/l4X5SZQbjugWY2Eyzo
+YvgEFaP9d9YdnxYvLZRcb42FrYFOooy4KtB5UG5i68J2yIM/woPUIepW6B3Ty2ST
+VPHhnoLNc3Sm2mosGdreaosBiOMQ1eceohRxQpJUY5mjV5PVKeojQr2mn/B/aCFd
+euTbVorR8O6up1hsivxE01URCsNCi1hqYVhlb+rkNQIDAQABozwwOjAMBgNVHRME
+BTADAQH/MAsGA1UdDwQEAwICBDAdBgNVHQ4EFgQU0gF+NjU9itGc9MenPwJMHtzL
+keMwDQYJKoZIhvcNAQELBQADggEBAIjRvckFCQTiVhtgHXv4oXAs48ub5J+q5x9U
+qvpEOB0Sa6gYHgWjn7aAbgo4P+0vtrOMpwgZfs8Z3fCsHAsAwUrToKBLaiNom+lY
+BQUf4hu1O7F4NZ5Ex4fULIvlcACj/BXX6YZg5viBtrNdYEiJqcRmVc9xjc0yEZZV
+KmiZV5QWbxQsHSNP49HE124F2d55sX5yRElCExpKdUS3ksF01ZySr41FDc9BvWnw
+MaVB7SpWKr72SizxjNrj3QcYXyp8EbkhT2NP+dlRJF7M+c1amdzoZrJPElDucKbk
+cOo1883tSqkzu2kiqOUAPptADWqyOJjk5ICy//Fm+wh9mcr9iqw=
+-----END CERTIFICATE-----
+---
+Server certificate
+subject=CN=*.google.com
+issuer=C=US, ST=California, L=Sunnyvale, O=Fortinet, OU=Certificate Authority, CN=FG2H1GT925913357, emailAddress=support@fortinet.com
+---
+No client certificate CA names sent
+Peer signing digest: SHA256
+Peer signature type: ecdsa_secp256r1_sha256
+Peer Temp Key: X25519, 253 bits
+---
+SSL handshake has read 3561 bytes and written 1632 bytes
+Verification error: self-signed certificate in certificate chain
+---
+New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
+Protocol: TLSv1.3
+Server public key is 256 bit
+This TLS version forbids renegotiation.
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+Early data was not sent
+Verify return code: 19 (self-signed certificate in certificate chain)
+---

@@ -1,11 +1,33 @@
 # Stufe 1 baut die Anwendung. AS build gibt dieser Stufe einen Namen.
 FROM gradle:8.14.3-jdk21 AS build
+
+#Hier müssen sie das Zertifikat kopieren das ihnen bislang probleme gemacht hat. 
+COPY cert02.crt /usr/local/share/ca-certificates/cert02.crt
+
+RUN update-ca-certificates
+
+RUN keytool -importcert \
+    -noprompt \
+    -trustcacerts \
+    -alias cert02-ca \
+    -file /usr/local/share/ca-certificates/cert02.crt \
+    -keystore $JAVA_HOME/lib/security/cacerts \
+    -storepass changeit
+
 # Alle folgenden Befehle arbeiten in diesem Ordner.
 WORKDIR /workspace
 
 # Kopiert Builddateien und Quellcode in das Image.
+#COPY build.gradle settings.gradle ./
+#COPY src ./src
+
+COPY gradlew .
+COPY gradle gradle
 COPY build.gradle settings.gradle ./
-COPY src ./src
+COPY src src
+
+RUN chmod +x gradlew
+RUN ./gradlew --no-daemon clean bootJar
 
 # RUN führt den Befehl beim Image-Bau aus.
 RUN gradle --no-daemon clean bootJar
