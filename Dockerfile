@@ -43,7 +43,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Erstellt einen Benutzer ohne Administratorrechte.
-RUN useradd --system --uid 10001 appuser
+RUN useradd --system --uid 1001 appuser
 
 # Kopiert nur das fertige Programm aus der Build-Stufe.
 COPY --from=build /workspace/build/libs/task-api.jar /app/app.jar
