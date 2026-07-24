@@ -17,6 +17,7 @@ spec:
         - name: task-api
           image: task-api:initial # Name und Version des Container-Images.
           imagePullPolicy: Never # Nutzt lokales Image, wenn vorhanden.
+          runAsNonRoot: true
           ports:
             - containerPort: 8080 # Port, auf dem die Anwendung lauscht.
           readinessProbe: # Prüft, ob der Pod Anfragen annehmen darf.
