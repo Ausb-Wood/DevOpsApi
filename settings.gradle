@@ -1,0 +1,2 @@
+// Diese Datei enthält allgemeine Einstellungen für den Gradle-Build.
+rootProject.name = 'task-api' // Name des Hauptprojekts und Basis für Artefaktnamen.

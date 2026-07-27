@@ -1,0 +1,22 @@
+--- # Markiert den Anfang eines YAML-Dokuments.
+# Ansible führt wiederholbare Verwaltungsaufgaben aus.
+- name: DevOps-Kursarbeitsplatz vorbereiten
+  hosts: localhost # Ziel ist diese Ubuntu-VM.
+  connection: local # Keine SSH-Verbindung nötig.
+  become: true # Führt Verwaltungsaufgaben mit sudo-Rechten aus.
+
+  tasks:
+    - name: Paketindex aktualisieren
+      ansible.builtin.apt:
+        update_cache: true # Entspricht apt update.
+        cache_valid_time: 3600 # Nutzt einen höchstens eine Stunde alten Index.
+
+    - name: Basispakete installieren
+      ansible.builtin.apt:
+        name:
+          - git
+          - curl
+          - unzip
+          - ca-certificates
+          - openjdk-21-jdk
+        state: present # Pakete müssen installiert sein; erneuter Lauf bleibt sicher.

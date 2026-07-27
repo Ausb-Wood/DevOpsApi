@@ -1,0 +1,13 @@
+# Service bietet eine stabile Adresse vor wechselnden Pods.
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-api
+spec:
+  selector:
+    app: task-api # Leitet an Pods mit diesem Label weiter.
+  ports:
+    - name: http
+      port: 80 # Port des Services.
+      targetPort: 8080 # Zielport im Container.
+  type: NodePort # Macht den Service über einen Port des Minikube-Nodes erreichbar.
