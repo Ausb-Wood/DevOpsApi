@@ -88,3 +88,4 @@ Mindestens eine fachliche Erweiterung ist selbst zu programmieren, beispielsweis
 
 Jede Erweiterung benötigt nachvollziehbare Commits, Tests und Dokumentation.
 Test: Pipeline mit eigenem Runner
+Pipeline erneut testen
