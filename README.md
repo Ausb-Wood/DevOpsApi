@@ -1,6 +1,6 @@
 # Task API – Startrepository für den DevOps-Kurs
 
-## Verwendete Versionen
+## Verwendete Versionen :D
 
 - Java 21
 - Spring Boot 3.5.4
