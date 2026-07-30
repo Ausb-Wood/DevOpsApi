@@ -3,6 +3,10 @@ name: CI and Minikube Deployment
 on:
   push:
     branches: [main]
+  pull_request:
+    branches:
+      - dev
+      - main
   workflow_dispatch:
 
 concurrency:
@@ -53,13 +57,20 @@ jobs:
 
       - name: Run tests
         run: ./gradlew clean test
-
+        
+  build-deploy:
+      name: Test, build image and deploy to Minikube
+      if: github.base_ref == 'main'
+      runs-on: [self-hosted, linux, x64]
+      timeout-minutes: 20
+      
+      steps:
       - name: Verify Minikube cluster
         run: |
           minikube status --profile "${MINIKUBE_PROFILE}"
           kubectl config current-context
           kubectl get nodes
-
+    
       - name: Define image tag
         run: echo "IMAGE_TAG=${GITHUB_SHA::12}" >> "$GITHUB_ENV"
 
