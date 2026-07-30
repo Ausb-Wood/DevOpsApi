@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,5 +60,83 @@ class TaskControllerTest {
                         .content("{\"title\":\"   \"}"))
                 .andExpect(status().isBadRequest()) // HTTP 400 erwartet.
                 .andExpect(jsonPath("$.error").exists());
+    }
+
+    @Test
+    void editReturnsCreatedTask() throws Exception {
+        String body = objectMapper.writeValueAsString(
+                new TaskController.CreateTaskRequest("Git-Branch anlegen")
+        );
+
+        mockMvc.perform(post("/api/tasks") // Task anlegen
+                        .contentType(MediaType.APPLICATION_JSON) // Der Request enthält JSON.
+                        .content(body))
+                .andExpect(status().isCreated()); // HTTP 201 erwartet.
+ 
+        mockMvc.perform(patch("/api/tasks/1") // Task bearbeiten
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Git-Branch angelegt\"}")) // ändert den Titel
+                .andExpect(status().isOk()) // HTTP 200 erwartet.
+                .andExpect(jsonPath("$.title").value("Git-Branch angelegt"))
+                .andExpect(jsonPath("$.completed").value(false));
+    }
+
+    @Test
+    void editRejectsBlankTitle() throws Exception {
+                String body = objectMapper.writeValueAsString(
+                new TaskController.CreateTaskRequest("Git-Branch anlegen")
+        );
+
+        mockMvc.perform(post("/api/tasks")
+                        .contentType(MediaType.APPLICATION_JSON) // Der Request enthält JSON.
+                        .content(body))
+                .andExpect(status().isCreated()); // HTTP 201 erwartet.
+        
+        mockMvc.perform(patch("/api/tasks/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"   \"}")) // ändert den Titel auf leeren String
+                .andExpect(status().isBadRequest()) // HTTP 400 erwartet.
+                .andExpect(jsonPath("$.error").exists());
+    }
+
+    @Test
+    void editRejectsExistingTitle() throws Exception {
+                String body = objectMapper.writeValueAsString(
+                new TaskController.CreateTaskRequest("Git-Branch anlegen")
+        );
+                String body2 = objectMapper.writeValueAsString(
+                new TaskController.CreateTaskRequest("Git-Branch angelegt")
+        );
+
+        mockMvc.perform(post("/api/tasks")
+                        .contentType(MediaType.APPLICATION_JSON) // Der Request enthält JSON.
+                        .content(body))
+                .andExpect(status().isCreated()); // HTTP 201 erwartet.
+
+        mockMvc.perform(post("/api/tasks")
+                        .contentType(MediaType.APPLICATION_JSON) // Der Request enthält JSON.
+                        .content(body2))
+                .andExpect(status().isCreated()); // HTTP 201 erwartet.
+
+        mockMvc.perform(patch("/api/tasks/2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body)) // setzt den Titel des zweiten Tasks auf den des ersten
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").exists());
+    }
+
+    @Test
+    void getTaskReturnsArrayWithTask() throws Exception { 
+                String body = objectMapper.writeValueAsString(
+                new TaskController.CreateTaskRequest("Git-Branch anlegen")
+        );
+
+        mockMvc.perform(post("/api/tasks")
+                        .contentType(MediaType.APPLICATION_JSON) // Der Request enthält JSON.
+                        .content(body))
+                .andExpect(status().isCreated()); // HTTP 201 erwartet.
+        
+        mockMvc.perform(get("/api/tasks/1"))
+                .andExpect(status().isOk()); // HTTP 200 erwartet.
     }
 }

@@ -30,4 +30,10 @@ public class ApiExceptionHandler {
                 .orElse("Ungültige Eingabe");
         return Map.of("error", message);
     }
+
+    @ExceptionHandler(IllegalStateException.class) // Reagiert auf doppelte Eingaben.
+    @ResponseStatus(HttpStatus.CONFLICT) // HTTP 409.
+    public Map<String, String> handleIllegalState(IllegalStateException exception) {
+    return Map.of("error", exception.getMessage());
+}
 }

@@ -52,4 +52,18 @@ public class TaskController {
             @Size(max = 100, message = "Der Titel darf höchstens 100 Zeichen enthalten.")
             String title) {
     }
+
+
+    @PatchMapping("/{id}") // PATCH /api/tasks/{id} Änderung des Task-Titels
+    public Task edit(@Valid @RequestBody CreateTaskRequest request, @PathVariable long id) {
+        // @RequestBody liest JSON; @Valid prüft die Regeln im record.
+        return service.edit(request.title(), id);
+    }
+
+
+    @GetMapping("/{id}") // GET /api/tasks/{id} Anzeigen des Tasks nach id
+    public Task getTask(@PathVariable long id) {
+        return service.getTask(id);
+    }
+
 }
