@@ -49,7 +49,7 @@ RUN useradd --system --uid 1001 appuser
 COPY --from=build /workspace/build/libs/task-api.jar /app/app.jar
 
 # Ab hier läuft der Container als eingeschränkter Benutzer.
-USER appuser
+USER 1001
 # Dokumentiert den verwendeten Anwendungsport.
 EXPOSE 8080
 # Startbefehl des Containers.
