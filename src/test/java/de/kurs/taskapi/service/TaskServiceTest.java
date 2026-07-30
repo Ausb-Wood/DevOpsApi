@@ -41,4 +41,26 @@ class TaskServiceTest {
 
         assertTrue(exception.getMessage().contains("999"));
     }
+
+    @Test
+    void editTrimsTitleAndEditsOpenTask() {
+        Task task = service.create("  CI-Pipeline erstellen  "); // Führt die Erstellung des Tasks aus.
+        
+        Task editedTask = service.edit("    CI-Pipeline gepipet    ", task.id());  // Bearbeitet erstellten Task
+
+        assertEquals("CI-Pipeline gepipet", editedTask.title()); // Erwarteter und tatsächlicher Wert müssen gleich sein.
+        assertFalse(editedTask.completed()); // Erwartet false.
+        assertNotNull(editedTask.id()); // Erwartet einen vorhandenen Wert.
+    }
+
+    @Test
+    void getTaskRejectsUnknownId() {
+        // assertThrows erwartet, dass der folgende Aufruf genau diesen Fehler auslöst.
+        NoSuchElementException exception = assertThrows(
+                NoSuchElementException.class,
+                () -> service.complete(999) // Lambda: kleine Funktion ohne eigenen Methodennamen.
+        );
+
+        assertTrue(exception.getMessage().contains("999"));
+    }
 }
