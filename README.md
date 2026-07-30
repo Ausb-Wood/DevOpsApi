@@ -1,6 +1,6 @@
 # Task API – Startrepository für den DevOps-Kurs
 
-## Verwendete Versionen :D
+## Verwendete Versionen :D :D
 
 - Java 21
 - Spring Boot 3.5.4
@@ -87,5 +87,3 @@ Mindestens eine fachliche Erweiterung ist selbst zu programmieren, beispielsweis
 - Datenbank anbinden
 
 Jede Erweiterung benötigt nachvollziehbare Commits, Tests und Dokumentation.
-Test: Pipeline mit eigenem Runner
-Pipeline erneut testen

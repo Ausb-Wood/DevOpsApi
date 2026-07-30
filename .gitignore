@@ -15,4 +15,3 @@ Thumbs.db
 # Lokale Umgebungsdateien und Geheimnisse.
 .env
 *.local
-actions-runner/
