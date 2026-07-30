@@ -9,5 +9,6 @@ public record Task(
         @NotBlank(message = "Der Titel darf nicht leer sein.")
         @Size(max = 100, message = "Der Titel darf höchstens 100 Zeichen enthalten.")
         String title, // String ist Text.
-        boolean completed) { // boolean ist true oder false.
+        boolean completed,
+        Priority priority) { // boolean ist true oder false.
 }
