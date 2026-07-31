@@ -60,7 +60,6 @@ jobs:
         
   build-deploy:
       name: Test, build image and deploy to Minikube
-      if: github.base_ref == 'main'
       runs-on: [self-hosted, linux, x64]
       timeout-minutes: 20
       
