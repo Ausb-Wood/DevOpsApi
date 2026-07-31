@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.GetMapping; // Verknüpft HTTP GE
 import org.springframework.web.bind.annotation.RequestMapping; // Gemeinsamer URL-Anfang.
 import org.springframework.web.bind.annotation.RestController; // Rückgaben werden als JSON gesendet.
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map; // Schlüssel-Wert-Sammlung.
 
 /** Liefert den technischen Zustand der Anwendung. */
@@ -13,6 +15,6 @@ public class HealthController {
 
     @GetMapping // Reagiert auf GET /api/health.
     public Map<String, String> health() {
-        return Map.of("status", "UP"); // Spring wandelt die Map in JSON um.
+        return Map.of("status", "UP", "timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))); // Spring wandelt die Map in JSON um.
     }
 }

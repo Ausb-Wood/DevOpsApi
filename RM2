@@ -1,0 +1,285 @@
+# Teilnehmerskript: Task API verstehen und starten
+
+## Ziel
+
+Nach dieser Anleitung kannst du:
+
+- den Projektaufbau erklären,
+- Gradle und Spring Boot einordnen,
+- die Anwendung starten,
+- die API testen,
+- den Weg einer Anfrage nachvollziehen.
+
+## 1. Was ist dieses Projekt?
+
+Die **Task API** ist eine kleine Java-Webanwendung. Mit ihr können Aufgaben über HTTP angelegt, angezeigt und abgeschlossen werden.
+
+Die Antworten werden als JSON zurückgegeben.
+
+Beispiel:
+
+```json
+{"id":1,"title":"Docker lernen","completed":false}
+```
+
+## 2. Welche Werkzeuge werden verwendet?
+
+### Java
+
+Java ist die Programmiersprache. Benötigt wird das **JDK 21**.
+
+Prüfen:
+
+```bash
+java --version
+javac --version
+```
+
+### Gradle
+
+Gradle baut und startet das Projekt. Es lädt Bibliotheken, kompiliert den Code und führt Tests aus.
+
+Du verwendest den Gradle Wrapper:
+
+```bash
+./gradlew
+```
+
+Dadurch musst du Gradle nicht selbst installieren.
+
+### Spring Boot
+
+Spring Boot vereinfacht Java-Webanwendungen. Es startet automatisch einen eingebetteten Webserver und verbindet URLs mit Java-Methoden.
+
+## 3. Projektstruktur
+
+```text
+src/main/java/          Anwendungscode
+src/main/resources/     Einstellungen
+src/test/java/          Tests
+build.gradle            Build und Bibliotheken
+gradlew                  Gradle-Startskript
+Dockerfile               Container-Bauanleitung
+k8s/                     Kubernetes-Dateien
+```
+
+## 4. Wie läuft eine Anfrage durch das Projekt?
+
+```text
+Browser oder curl
+  -> Controller
+  -> Service
+  -> Repository
+  -> JSON-Antwort
+```
+
+- **Controller:** nimmt HTTP-Anfragen entgegen.
+- **Service:** enthält die fachliche Logik.
+- **Repository:** speichert Aufgaben im Arbeitsspeicher.
+- **Model:** beschreibt den Aufbau einer Aufgabe.
+
+## 5. Projekt herunterladen
+
+```bash
+git clone <REPOSITORY-URL>
+cd <PROJEKTVERZEICHNIS>
+```
+
+Zeige die Dateien an:
+
+```bash
+ls -la
+find src -maxdepth 5 -type f
+```
+
+## 6. Gradle Wrapper vorbereiten
+
+```bash
+chmod +x gradlew
+./gradlew --version
+```
+
+`chmod +x` erlaubt Linux, das Skript auszuführen.
+
+Beim ersten Start lädt der Wrapper die festgelegte Gradle-Version. Dafür wird eine Internetverbindung benötigt.
+
+## 7. Tests ausführen
+
+```bash
+./gradlew clean test
+```
+
+Bedeutung:
+
+- `clean`: löscht alte Build-Ergebnisse.
+- `test`: kompiliert den Code und führt automatisierte Tests aus.
+
+Bei Erfolg erscheint am Ende:
+
+```text
+BUILD SUCCESSFUL
+```
+
+## 8. Anwendung starten
+
+```bash
+./gradlew bootRun
+```
+
+Die Anwendung läuft danach normalerweise unter:
+
+```text
+http://localhost:8080
+```
+
+Lasse dieses Terminal geöffnet.
+
+## 9. API in einem zweiten Terminal testen
+
+Health-Check:
+
+```bash
+curl http://localhost:8080/api/health
+```
+
+Alle Aufgaben anzeigen:
+
+```bash
+curl http://localhost:8080/api/tasks
+```
+
+Neue Aufgabe anlegen:
+
+```bash
+curl -i -X POST http://localhost:8080/api/tasks \
+  -H 'Content-Type: application/json' \
+  -d '{"title":"Spring Boot verstehen"}'
+```
+
+Aufgaben erneut anzeigen:
+
+```bash
+curl http://localhost:8080/api/tasks
+```
+
+Aufgabe mit ID `1` abschließen:
+
+```bash
+curl -i -X PATCH http://localhost:8080/api/tasks/1/complete
+```
+
+## 10. Anwendung beenden
+
+Wechsle in das Terminal mit `bootRun` und drücke:
+
+```text
+Strg + C
+```
+
+## 11. Ausführbare JAR-Datei bauen
+
+```bash
+./gradlew clean bootJar
+```
+
+Die erzeugte Datei liegt unter:
+
+```text
+build/libs/
+```
+
+Start:
+
+```bash
+java -jar build/libs/*.jar
+```
+
+## 12. Wichtige Dateien ansehen
+
+### `build.gradle`
+
+Enthält:
+
+- Gradle-Plugins,
+- Java-Version,
+- Spring-Boot-Version,
+- benötigte Bibliotheken,
+- Testkonfiguration.
+
+### `TaskApiApplication.java`
+
+Enthält die `main`-Methode. Sie startet Spring Boot.
+
+### `TaskController.java`
+
+Verbindet URLs und HTTP-Methoden mit Java-Code.
+
+### `TaskService.java`
+
+Enthält die fachliche Logik.
+
+### `TaskRepository.java`
+
+Speichert Aufgaben in einer Liste im Arbeitsspeicher.
+
+### `application.properties`
+
+Legt unter anderem den Port `8080` fest.
+
+## 13. Begriffe kurz erklärt
+
+- `public`: von anderen Klassen nutzbar.
+- `private`: nur innerhalb der eigenen Klasse nutzbar.
+- `static`: kann ohne vorher erzeugtes Objekt verwendet werden.
+- `void`: die Methode gibt keinen Wert zurück.
+- `record`: kompakte Java-Datenklasse.
+- `synchronized`: nur ein Thread darf die Methode gleichzeitig ausführen.
+- Annotation: Zusatzinformation wie `@RestController` oder `@GetMapping`.
+- Dependency: externe Bibliothek, die das Projekt benötigt.
+- Task: ausführbare Gradle-Aufgabe, zum Beispiel `test` oder `bootRun`.
+
+## 14. Typische Fehler
+
+### `Permission denied`
+
+```bash
+chmod +x gradlew
+```
+
+### Falsche Java-Version
+
+```bash
+java --version
+```
+
+Erwartet wird Java 21.
+
+### Port 8080 ist belegt
+
+```bash
+ss -ltnp | grep 8080
+```
+
+Beende den anderen Prozess oder ändere den Port in `application.properties`.
+
+### Gradle kann Bibliotheken nicht laden
+
+Prüfe:
+
+```bash
+getent hosts services.gradle.org
+curl -I https://services.gradle.org
+curl -I https://repo.maven.apache.org/maven2/
+```
+
+Mögliche Ursachen sind DNS, Proxy, Firewall oder fehlende CA-Zertifikate.
+
+## 15. Eigene Verständnisaufgabe
+
+1. Starte die Anwendung.
+2. Lege zwei Aufgaben an.
+3. Schließe eine Aufgabe ab.
+4. Finde im Code die Methode, die dafür zuständig ist.
+5. Ändere einen Titel im Test.
+6. Führe `./gradlew test` erneut aus.
+7. Dokumentiere, welche Schichten beteiligt waren.

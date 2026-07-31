@@ -42,4 +42,17 @@ public class TaskRepository {
         }
         return Optional.empty(); // Kein Treffer gefunden.
     }
+
+    // Angepasste Methode wie 'markCompleted()'
+    public synchronized Optional<Task> editTask(String title, long id) {
+        for (int index = 0; index < tasks.size(); index++) { // Durchläuft alle Listenpositionen.
+            Task current = tasks.get(index); // Liest das Element an der Position index.
+            if (current.id() == id) { // if führt den Block nur bei wahrer Bedingung aus.
+                Task updated = new Task(current.id(), title, current.completed()); // Unterschied zu markCompleted(): title wird durch request übergeben, completed() wird übernommen
+                tasks.set(index, updated); // Ersetzt die alte durch die neue Aufgabe.
+                return Optional.of(updated); // Optional mit vorhandenem Wert.
+            }
+        }
+        return Optional.empty(); // Kein Treffer gefunden.
+    }
 }
