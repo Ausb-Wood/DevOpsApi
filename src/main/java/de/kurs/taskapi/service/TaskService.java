@@ -1,12 +1,12 @@
 package de.kurs.taskapi.service;
 
-import de.kurs.taskapi.model.Priority;
 import de.kurs.taskapi.model.Task;
 import de.kurs.taskapi.repository.TaskRepository;
 import org.springframework.stereotype.Service; // Kennzeichnet fachliche Anwendungslogik.
 
 import java.util.List;
 import java.util.NoSuchElementException; // Fehler für eine nicht gefundene Aufgabe.
+
 
 /** Verbindet Controller und Repository und enthält fachliche Regeln. */
 @Service
@@ -22,12 +22,8 @@ public class TaskService {
         return repository.findAll();
     }
 
-    public List<Task> getByStatus(boolean completed) {
-        return repository.findByCompleted(completed);
-    }
-
-    public Task create(String title, Priority priority) {
-        return repository.save(title.trim(), priority); // trim entfernt Leerzeichen am Anfang und Ende.
+    public Task create(String title) {
+        return repository.save(title.trim()); // trim entfernt Leerzeichen am Anfang und Ende.
     }
 
     public Task complete(long id) {
@@ -36,15 +32,26 @@ public class TaskService {
                 .orElseThrow(() -> new NoSuchElementException("Aufgabe nicht gefunden: " + id));
     }
 
-    public Task updateTitle(long id, String newTitle) {
-        return repository.updateTitle(id, newTitle.trim())
+
+    public Task edit(String title, long id) {
+        String trimmed = title.trim();
+
+        boolean titleExistsElsewhere = repository.findAll().stream()
+            .anyMatch(t -> t.id() != id && t.title().equalsIgnoreCase(trimmed));
+
+        if (titleExistsElsewhere) {
+        throw new IllegalStateException("Titel bereits vergeben: " + trimmed);
+        }
+
+        return repository.editTask(title.trim(), id) // übergibt getrimmten title und id
                 .orElseThrow(() -> new NoSuchElementException("Aufgabe nicht gefunden: " + id));
     }
 
-    public void delete(long id) {
-        boolean removed = repository.deleteById(id);
-        if (!removed) {
-            throw new NoSuchElementException("Aufgabe nicht gefunden: " + id);
-        }
+
+
+    public Task getTask(long id) {
+        return repository.findById(id) // führt findById Methode aus und gibt Task mit übergebener id zurück
+                .orElseThrow(() -> new NoSuchElementException("Aufgabe nicht gefunden: " + id));
     }
+
 }

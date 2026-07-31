@@ -1,6 +1,5 @@
 package de.kurs.taskapi.repository;
 
-import de.kurs.taskapi.model.Priority;
 import de.kurs.taskapi.model.Task;
 import org.springframework.stereotype.Repository; // Kennzeichnet eine Datenzugriffsklasse.
 
@@ -25,16 +24,9 @@ public class TaskRepository {
         return tasks.stream().filter(task -> task.id() == id).findFirst();
     }
 
-    public synchronized List<Task> findByCompleted(boolean completed) {
-        // filter behält nur Aufgaben mit passendem Status.
-        return tasks.stream()
-                .filter(task -> task.completed() == completed)
-                .toList();
-    }
-
-    public synchronized Task save(String title, Priority priority) {
+    public synchronized Task save(String title) {
         long id = sequence.incrementAndGet(); // Erhöht den Zähler und liefert die neue ID.
-        Task task = new Task(id, title, false, priority); // new erzeugt ein neues Objekt.
+        Task task = new Task(id, title, false); // new erzeugt ein neues Objekt.
         tasks.add(task); // Fügt die Aufgabe zur Liste hinzu.
         return task; // Gibt die gespeicherte Aufgabe zurück.
     }
@@ -43,7 +35,7 @@ public class TaskRepository {
         for (int index = 0; index < tasks.size(); index++) { // Durchläuft alle Listenpositionen.
             Task current = tasks.get(index); // Liest das Element an der Position index.
             if (current.id() == id) { // if führt den Block nur bei wahrer Bedingung aus.
-                Task updated = new Task(current.id(), current.title(), true, current.priority());
+                Task updated = new Task(current.id(), current.title(), true);
                 tasks.set(index, updated); // Ersetzt die alte durch die neue Aufgabe.
                 return Optional.of(updated); // Optional mit vorhandenem Wert.
             }
@@ -51,20 +43,16 @@ public class TaskRepository {
         return Optional.empty(); // Kein Treffer gefunden.
     }
 
-    public synchronized Optional<Task> updateTitle(long id, String newTitle) {
-        for (int index = 0; index < tasks.size(); index++) {
-            Task current = tasks.get(index);
-            if (current.id() == id) {
-                Task updated = new Task(current.id(), newTitle, current.completed(), current.priority());
-                tasks.set(index, updated);
-                return Optional.of(updated);
+    // Angepasste Methode wie 'markCompleted()'
+    public synchronized Optional<Task> editTask(String title, long id) {
+        for (int index = 0; index < tasks.size(); index++) { // Durchläuft alle Listenpositionen.
+            Task current = tasks.get(index); // Liest das Element an der Position index.
+            if (current.id() == id) { // if führt den Block nur bei wahrer Bedingung aus.
+                Task updated = new Task(current.id(), title, current.completed()); // Unterschied zu markCompleted(): title wird durch request übergeben, completed() wird übernommen
+                tasks.set(index, updated); // Ersetzt die alte durch die neue Aufgabe.
+                return Optional.of(updated); // Optional mit vorhandenem Wert.
             }
         }
-        return Optional.empty();
-    }
-
-    public synchronized boolean deleteById(long id) {
-        // removeIf entfernt alle passenden Elemente und gibt zurück, ob etwas entfernt wurde.
-        return tasks.removeIf(task -> task.id() == id);
+        return Optional.empty(); // Kein Treffer gefunden.
     }
 }
